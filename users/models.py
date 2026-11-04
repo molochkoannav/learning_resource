@@ -29,14 +29,14 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     """Кастомная модель пользователя"""
-    
+    username = None 
     avatar_image = models.ImageField(upload_to='avatar_images/', verbose_name='Изображение', blank=True, null=True, help_text= 'Загрузите свой аватар')
     phone_number = models.CharField(max_length=20, verbose_name='Номер телефона', blank=True, null=True, help_text= 'Введите номер телефона')
     city = models.CharField(max_length=100, verbose_name='Город', blank=True, null=True, help_text= 'Введите название города')
     email = models.EmailField(unique=True)
 
     EMAIL_FIELD = "email"
-    USERNAME_FIELD = "email"
+    USERNAME_FIELD = "email, avatar_image, phone_number, city" 
     REQUIRED_FIELDS = []
     def __str__(self):
         return self.email
