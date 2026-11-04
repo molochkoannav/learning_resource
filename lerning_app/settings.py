@@ -1,6 +1,7 @@
-from pathlib import Path
-from dotenv import load_dotenv
 import os
+from pathlib import Path
+
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
@@ -97,13 +98,6 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-
-MAILERS = {
-    "default": {
-        "BACKEND": "django.core.mail.backends.console.EmailBackend",
-    },
-}
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 
 
@@ -126,3 +120,5 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@myapp.local')
 LOGIN_URL = '/accounts/login/'           
 LOGIN_REDIRECT_URL = '/'               
 LOGOUT_REDIRECT_URL = '/'
+
+AUTH_USER_MODEL = "users.CustomUser"
