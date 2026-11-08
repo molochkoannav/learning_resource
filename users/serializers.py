@@ -7,4 +7,16 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = (
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "avatar_image",
+            "phone_number",
+            "city",
+            "password",
+        )
+        extra_kwargs = {
+            "password": {"write_only": True, "required": False},
+        }

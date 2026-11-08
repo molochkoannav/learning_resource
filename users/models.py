@@ -51,6 +51,8 @@ class CustomUser(AbstractUser):
     )
     email = models.EmailField(unique=True, verbose_name="Email")
 
+    objects = CustomUserManager()
+
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
