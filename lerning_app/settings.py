@@ -4,13 +4,13 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(os.path.join(BASE_DIR, '.env'))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 
 INSTALLED_APPS = [
@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     "users.apps.UsersConfig",
     "rest_framework",
     "materials",
-    
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -41,7 +41,7 @@ ROOT_URLCONF = "lerning_app.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'templates'],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -56,17 +56,16 @@ TEMPLATES = [
 WSGI_APPLICATION = "lerning_app.wsgi.application"
 
 
-DATABASES = { 
-    'default': { 
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', 
-        'NAME': os.getenv('DATABASE_NAME'), 
-        'USER': os.getenv('DATABASE_USER'), 
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'), 
-        'HOST': os.getenv('DATABASE_HOST'), 
-        'PORT': os.getenv('DATABASE_PORT', default='5432'), 
-    } 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.getenv("DATABASE_NAME"),
+        "USER": os.getenv("DATABASE_USER"),
+        "PASSWORD": os.getenv("DATABASE_PASSWORD"),
+        "HOST": os.getenv("DATABASE_HOST"),
+        "PORT": os.getenv("DATABASE_PORT", default="5432"),
+    }
 }
-
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -85,28 +84,25 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'Europe/Moscow'
+TIME_ZONE = "Europe/Moscow"
 
 USE_I18N = True
 
 USE_TZ = True
 
 
-
 STATIC_URL = "static/"
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 EMAIL_BACKEND = os.environ.get(
-    'EMAIL_BACKEND',
-    'django.core.mail.backends.console.EmailBackend'
+    "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
 )
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@myapp.local')
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "noreply@myapp.local")
 
 # EMAIL_HOST = 'smtp.yandex.ru'
 # EMAIL_PORT = 465
@@ -117,8 +113,12 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@myapp.local')
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # EMAIL_TIMEOUT = 10
 
-LOGIN_URL = '/accounts/login/'           
-LOGIN_REDIRECT_URL = '/'               
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
 AUTH_USER_MODEL = "users.CustomUser"
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend', 'rest_framework.filters.OrderingFilter']
+}

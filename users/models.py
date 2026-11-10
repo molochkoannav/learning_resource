@@ -5,7 +5,7 @@ from django.db import models
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
-            raise ValueError('The Email field must be set')
+            raise ValueError("The Email field must be set")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -63,3 +63,15 @@ class CustomUser(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+
+class Payment(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='payments')
+    date_payment = models.DateTimeField(auto_now_add=True)
+    paid_course = models.ForeignKey('materials.Course', on_delete=models.CASCADE, null=True, blank=True)
+    paid_lesson = models.ForeignKey('materials.Lesson', on_delete=models.CASCADE, null=True, blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_method = models.CharField(max_length=20, choices=(('card', 'Картой'), ('cash', 'Наличными')))
+    
+
+    def __str__(self):
+        return f"{self.user} - {self.amount} - {self.date}"

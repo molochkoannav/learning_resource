@@ -10,7 +10,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ( "email",)
+        fields = ("email",)
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -23,7 +23,7 @@ class CustomUserChangeForm(UserChangeForm):
 
 @admin.register(CustomUser)
 class CustomUserAdmin(BaseUserAdmin):
-  
+
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
 
@@ -40,7 +40,6 @@ class CustomUserAdmin(BaseUserAdmin):
     search_fields = ("email", "phone_number", "city", "first_name", "last_name")
     ordering = ("email",)
 
-    
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         (
@@ -70,7 +69,6 @@ class CustomUserAdmin(BaseUserAdmin):
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
 
-    
     add_fieldsets = (
         (
             None,
@@ -83,4 +81,3 @@ class CustomUserAdmin(BaseUserAdmin):
 
     filter_horizontal = ("groups", "user_permissions")
     readonly_fields = ("last_login", "date_joined")
-
