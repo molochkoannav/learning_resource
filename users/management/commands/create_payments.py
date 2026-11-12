@@ -4,7 +4,11 @@ from materials.models import Course, Lesson
 
 
 class Command(BaseCommand):
-    help = "Создание тестовых платежей"
+    help =  help = (
+        "Создание тестовых платежей. "
+        "Штатный способ заполнения таблицы Payment тестовыми данными "
+        "(см. README, раздел «Тестовые данные»)."
+    )
 
     def handle(self, *args, **kwargs):
         user = CustomUser.objects.order_by("id").first()

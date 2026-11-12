@@ -23,7 +23,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    payments = PaymentShortSerializer(source='payment_set', many=True, read_only=True)    
+    payments = PaymentShortSerializer(source='payments', many=True, read_only=True)    
     class Meta:
         model = User
         fields = (
