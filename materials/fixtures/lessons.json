@@ -1,0 +1,68 @@
+[
+  {
+    "model": "materials.lesson",
+    "pk": 1,
+    "fields": {
+      "course": 1,
+      "name": "Введение в Python",
+      "description": "Установка интерпретатора, первая программа и работа в REPL.",
+      "preview_image": null,
+      "video": "https://example.com/videos/python-intro"
+    }
+  },
+  {
+    "model": "materials.lesson",
+    "pk": 2,
+    "fields": {
+      "course": 1,
+      "name": "Переменные и типы данных",
+      "description": "Числа, строки, списки, словари и приведение типов.",
+      "preview_image": null,
+      "video": "https://example.com/videos/python-types"
+    }
+  },
+  {
+    "model": "materials.lesson",
+    "pk": 3,
+    "fields": {
+      "course": 2,
+      "name": "Установка и настройка Django",
+      "description": "Создание проекта, настройка settings и запуск сервера разработки.",
+      "preview_image": null,
+      "video": "https://example.com/videos/django-setup"
+    }
+  },
+  {
+    "model": "materials.lesson",
+    "pk": 4,
+    "fields": {
+      "course": 2,
+      "name": "Сериализаторы DRF",
+      "description": "ModelSerializer, валидация данных и вложенные сериализаторы.",
+      "preview_image": null,
+      "video": "https://example.com/videos/drf-serializers"
+    }
+  },
+  {
+    "model": "materials.lesson",
+    "pk": 5,
+    "fields": {
+      "course": 3,
+      "name": "Основы SQL",
+      "description": "SELECT, WHERE, ORDER BY и фильтрация данных.",
+      "preview_image": null,
+      "video": "https://example.com/videos/sql-basics"
+    }
+  },
+  {
+    "model": "materials.lesson",
+    "pk": 6,
+    "fields": {
+      "course": 3,
+      "name": "JOIN и агрегатные функции",
+      "description": "Объединение таблиц, GROUP BY, COUNT, SUM и AVG.",
+      "preview_image": null,
+      "video": null
+    }
+  }
+]

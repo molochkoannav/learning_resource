@@ -1,0 +1,53 @@
+[
+  {
+    "model": "users.customuser",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$1500000$ubSS6SlM440LzVcGprGM31$PNxlsyeUVDfFz/Bir0nCw7ovMi5k1YBO7EU5ukH7R7U=",
+      "last_login": "2024-09-10T09:00:00Z",
+      "is_superuser": true,
+      "first_name": "Админ",
+      "last_name": "Админов",
+      "email": "admin@example.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2024-01-10T10:00:00Z",
+      "phone_number": "+7 900 000-00-01",
+      "city": "Москва"
+    }
+  },
+  {
+    "model": "users.customuser",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$1500000$ubSS6SlM440LzVcGprGM31$PNxlsyeUVDfFz/Bir0nCw7ovMi5k1YBO7EU5ukH7R7U=",
+      "last_login": "2024-09-12T12:30:00Z",
+      "is_superuser": false,
+      "first_name": "Иван",
+      "last_name": "Петров",
+      "email": "ivan@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-02-01T11:00:00Z",
+      "phone_number": "+7 900 000-00-02",
+      "city": "Москва"
+    }
+  },
+  {
+    "model": "users.customuser",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$1500000$ubSS6SlM440LzVcGprGM31$PNxlsyeUVDfFz/Bir0nCw7ovMi5k1YBO7EU5ukH7R7U=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Мария",
+      "last_name": "Сидорова",
+      "email": "maria@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-03-15T08:45:00Z",
+      "phone_number": "+7 900 000-00-03",
+      "city": "Санкт-Петербург"
+    }
+  }
+]
