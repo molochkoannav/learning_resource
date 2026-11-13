@@ -22,7 +22,26 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    payments = PaymentShortSerializer(source='payments', many=True, read_only=True)    
+    payments = PaymentShortSerializer(many=True, read_only=True)    
+
+    def create(self, validated_data):
+        password = validated_data.pop("password", None)
+        user = User(**validated_data)
+        if password:
+            user.set_password(password)
+        else:
+            user.set_unusable_password()
+        user.save()
+        return user
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password", None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        if password:
+            instance.set_password(password)
+        instance.save()
+        return instance
     class Meta:
         model = User
         fields = (
@@ -37,6 +56,8 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "password": {"write_only": True, "required": False},
         }
+
+    
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -53,7 +74,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
       
         user = User.objects.create_user(
-            id=validated_data['id'],
             email=validated_data.get('email', ''),
             password=validated_data['password']
         )

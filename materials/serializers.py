@@ -10,6 +10,7 @@ class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
         fields = "__all__"
+        read_only_fields = ("owner",)
 
 class CourseSerializer(ModelSerializer):
     count_lessons = serializers.SerializerMethodField()
@@ -19,6 +20,7 @@ class CourseSerializer(ModelSerializer):
     class Meta:
         model = Course
         fields: ClassVar[list[str]] = [
+            "id",
             "name",
             "preview_image",
             "description",

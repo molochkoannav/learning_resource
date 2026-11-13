@@ -1,13 +1,16 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 class IsModerator(BasePermission):
-    """Разрешает доступ только пользователям из группы moderators."""
-    def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated
-            and request.user.groups.filter(name='moderators').exists()
-        )
+        """Разрешает доступ только пользователям из группы moderators."""
 
+        def has_permission(self, request, view):
+            return (
+                request.user.is_authenticated
+                and request.user.groups.filter(name="moderators").exists()
+            )
+
+        def has_object_permission(self, request, view, obj):
+            return self.has_permission(request, view)
 
 class IsModeratorOrReadOnly(BasePermission):
     """
@@ -19,7 +22,7 @@ class IsModeratorOrReadOnly(BasePermission):
             return True
         return (
             request.user.is_authenticated
-            and request.user.groups.filter(name='moderators').exists()
+            and request.user.groups.filter(name='Moderator').exists()
         )
 
 class IsOwner(BasePermission):
