@@ -9,11 +9,12 @@ class Course(models.Model):
     )
     description = models.TextField(verbose_name="Описание")
     owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='courses',
-        null=True, blank=True,  
-    )
+    settings.AUTH_USER_MODEL,
+    on_delete=models.PROTECT,
+    related_name="courses",
+    null=True,
+    blank=True,
+)
     def __str__(self):
         return self.name
 

@@ -10,6 +10,7 @@ from .models import Course, Lesson
 from .serializers import CourseSerializer, LessonSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from users.permissions import IsModerator, IsModeratorOrReadOnly, IsOwner
+MODERATOR_GROUP_NAME = "Moderator"
 
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
@@ -30,7 +31,7 @@ class CourseViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.groups.filter(name='Moderator').exists():
+        if user.groups.filter(name=MODERATOR_GROUP_NAME).exists():
             return Course.objects.all()     
         return Course.objects.filter(owner=user)
 
@@ -49,7 +50,7 @@ class LessonListView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        if user.groups.filter(name='Moderator').exists():
+        if user.groups.filter(name=MODERATOR_GROUP_NAME).exists():
             return Lesson.objects.all()
         return Lesson.objects.filter(owner=user)
 
