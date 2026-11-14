@@ -1,6 +1,5 @@
 from django.urls import path
 from rest_framework.routers import SimpleRouter
-
 from materials.apps import MaterialsConfig
 from materials.views import (
     CourseViewSet,
@@ -22,6 +21,7 @@ urlpatterns = [
     path("lessons/create/", LessonCreateView.as_view(), name="lesson_create"),
     path("lessons/<int:pk>/update/", LessonUpdateView.as_view(), name="lesson_update"),
     path("lessons/<int:pk>/delete/", LessonDestroyView.as_view(), name="lesson_delete"),
+
 ]
 
 urlpatterns += router.urls

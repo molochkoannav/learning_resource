@@ -1,0 +1,29 @@
+[
+  {
+    "model": "materials.course",
+    "pk": 1,
+    "fields": {
+      "name": "Python-разработчик с нуля",
+      "description": "Базовый курс по Python: синтаксис, типы данных, функции, ООП и работа с файлами.",
+      "preview_image": null
+    }
+  },
+  {
+    "model": "materials.course",
+    "pk": 2,
+    "fields": {
+      "name": "Django REST Framework",
+      "description": "Разработка REST API на Django: представления, сериализаторы, права доступа и тестирование.",
+      "preview_image": null
+    }
+  },
+  {
+    "model": "materials.course",
+    "pk": 3,
+    "fields": {
+      "name": "SQL и базы данных",
+      "description": "Основы реляционных баз данных, SQL-запросы, индексы и проектирование схем.",
+      "preview_image": null
+    }
+  }
+]
