@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.conf import settings
+
+from materials.models import Course
 
 
 class CustomUserManager(BaseUserManager):
@@ -75,3 +78,13 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.amount} - {self.date_payment}"
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='subscriptions')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='subscriptions')
+
+    class Meta:
+        unique_together = ('user', 'course')
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
