@@ -4,7 +4,7 @@ from materials.models import Course, Lesson
 
 
 class Command(BaseCommand):
-    help =  help = (
+    help = help = (
         "Создание тестовых платежей. "
         "Штатный способ заполнения таблицы Payment тестовыми данными "
         "(см. README, раздел «Тестовые данные»)."

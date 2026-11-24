@@ -87,7 +87,9 @@ class LessonCRUDAndPermissionTests(APITestCase):
             "video": "https://www.youtube.com/watch?v=functions",
         }
 
-        response = self.client.post("/materials/lessons/create/", payload, format="json")
+        response = self.client.post(
+            "/materials/lessons/create/", payload, format="json"
+        )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Lesson.objects.count(), 3)
@@ -105,7 +107,9 @@ class LessonCRUDAndPermissionTests(APITestCase):
             "video": "https://youtu.be/blocked",
         }
 
-        response = self.client.post("/materials/lessons/create/", payload, format="json")
+        response = self.client.post(
+            "/materials/lessons/create/", payload, format="json"
+        )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(Lesson.objects.count(), 2)
@@ -119,7 +123,9 @@ class LessonCRUDAndPermissionTests(APITestCase):
             "video": "https://example.com/video",
         }
 
-        response = self.client.post("/materials/lessons/create/", payload, format="json")
+        response = self.client.post(
+            "/materials/lessons/create/", payload, format="json"
+        )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Lesson.objects.count(), 2)
