@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     "materials",
     "django_filters",
     "rest_framework_simplejwt",
-    "drf_yasg",
     'drf_spectacular'
 ]
 
@@ -147,4 +146,5 @@ SPECTACULAR_SETTINGS = {
     # OTHER SETTINGS
 }
 
-stripe.api_key = os.getenv("SECRET_KEY_1")
+STRIPE_SECRET_KEY = os.getenv("SECRET_KEY_1")
+stripe.api_key = STRIPE_SECRET_KEY

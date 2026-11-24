@@ -1,7 +1,12 @@
+from decimal import Decimal
+
 import stripe
 from django.conf import settings
+from rest_framework.response import Response
+from rest_framework import status
 
-stripe.api_key = settings.SECRET_KEY_1
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 
 def create_stripe_product(name: str, description: str = "") -> str:
@@ -25,7 +30,7 @@ def create_stripe_price(product_id: str, amount: float, currency: str = "rub") -
     """
     price = stripe.Price.create(
         product=product_id,
-        unit_amount=int(amount * 100),
+        unit_amount=int(Decimal(str(amount)) * 100),
         currency=currency,
     )
     return price.id
