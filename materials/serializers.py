@@ -41,5 +41,3 @@ class CourseSerializer(ModelSerializer):
             "lessons",
             "is_subscribed",
         ]
-
-

@@ -67,24 +67,43 @@ class CustomUser(AbstractUser):
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
 
+
 class Payment(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='payments')
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="payments"
+    )
     date_payment = models.DateTimeField(auto_now_add=True)
-    paid_course = models.ForeignKey('materials.Course', on_delete=models.CASCADE, null=True, blank=True)
-    paid_lesson = models.ForeignKey('materials.Lesson', on_delete=models.CASCADE, null=True, blank=True)
+    paid_course = models.ForeignKey(
+        "materials.Course", on_delete=models.CASCADE, null=True, blank=True
+    )
+    paid_lesson = models.ForeignKey(
+        "materials.Lesson", on_delete=models.CASCADE, null=True, blank=True
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    payment_method = models.CharField(max_length=20, choices=(('card', 'Картой'), ('cash', 'Наличными')))
-    
+    payment_method = models.CharField(
+        max_length=20, choices=(("card", "Картой"), ("cash", "Наличными"))
+    )
+
+    stripe_product_id = models.CharField(max_length=255, blank=True, null=True)
+    stripe_price_id = models.CharField(max_length=255, blank=True, null=True)
+    stripe_session_id = models.CharField(max_length=255, blank=True, null=True)
+    payment_url = models.URLField(blank=True, null=True)
+    status = models.CharField(max_length=50, default="created") 
+    currency = models.CharField(max_length=3, default="rub")
 
     def __str__(self):
         return f"{self.user} - {self.amount} - {self.date_payment}"
 
 
 class Subscription(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='subscriptions')
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='subscriptions')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="subscriptions"
+    )
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, related_name="subscriptions"
+    )
 
     class Meta:
-        unique_together = ('user', 'course')
-        verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки'
+        unique_together = ("user", "course")
+        verbose_name = "Подписка"
+        verbose_name_plural = "Подписки"
