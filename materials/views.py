@@ -14,6 +14,7 @@ from .models import Course, Lesson
 from .serializers import CourseSerializer, LessonSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from users.permissions import IsModerator, IsModeratorOrReadOnly, IsOwner
+from .tasks import send_course_update_notification
 
 MODERATOR_GROUP_NAME = "Moderator"
 
@@ -55,6 +56,10 @@ class CourseViewSet(ModelViewSet):
             return Course.objects.all()
         return Course.objects.filter(owner=user)
 
+    def perform_update(self, serializer):
+        instance = serializer.save()          
+        send_course_update_notification.delay(instance.id)
+
 
 class LessonCreateView(CreateAPIView):
     queryset = Lesson.objects.all()
@@ -88,6 +93,10 @@ class LessonUpdateView(UpdateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsModerator | IsOwner]
+
+    def perform_update(self, serializer):
+        lesson = serializer.save()
+        send_course_update_notification.delay(lesson.course_id)
 
 
 class LessonDestroyView(DestroyAPIView):
