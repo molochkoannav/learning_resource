@@ -19,6 +19,12 @@ class Course(models.Model):
         max_digits=10, decimal_places=2,
         default=0, verbose_name="Цена")
 
+    last_notified_at = models.DateTimeField(
+        null=True, 
+        blank=True,
+        verbose_name='Время последнего уведомления'
+    )
+
     def __str__(self):
         return self.name
 
@@ -49,6 +55,11 @@ class Lesson(models.Model):
     price = models.DecimalField(
         max_digits=10, decimal_places=2,
         default=0, verbose_name="Цена")
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Дата обновления'
+    )
 
     def __str__(self):
         return self.name
