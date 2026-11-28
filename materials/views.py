@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework.generics import (
     CreateAPIView,
     DestroyAPIView,
@@ -58,7 +59,7 @@ class CourseViewSet(ModelViewSet):
 
     def perform_update(self, serializer):
         instance = serializer.save()          
-        send_course_update_notification.delay(instance.id)
+        transaction.on_commit(lambda: send_course_update_notification.delay(instance.pk))
 
 
 class LessonCreateView(CreateAPIView):
