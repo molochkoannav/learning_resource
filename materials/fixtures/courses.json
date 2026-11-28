@@ -1,11 +1,14 @@
-[
+﻿[
   {
     "model": "materials.course",
     "pk": 1,
     "fields": {
       "name": "Python-разработчик с нуля",
+      "preview_image": null,
       "description": "Базовый курс по Python: синтаксис, типы данных, функции, ООП и работа с файлами.",
-      "preview_image": null
+      "owner": 1,
+      "price_course": "50000.00",
+      "last_notified_at": null
     }
   },
   {
@@ -13,8 +16,11 @@
     "pk": 2,
     "fields": {
       "name": "Django REST Framework",
+      "preview_image": null,
       "description": "Разработка REST API на Django: представления, сериализаторы, права доступа и тестирование.",
-      "preview_image": null
+      "owner": 1,
+      "price_course": "25000.00",
+      "last_notified_at": null
     }
   },
   {
@@ -22,8 +28,11 @@
     "pk": 3,
     "fields": {
       "name": "SQL и базы данных",
+      "preview_image": null,
       "description": "Основы реляционных баз данных, SQL-запросы, индексы и проектирование схем.",
-      "preview_image": null
+      "owner": 1,
+      "price_course": "15000.00",
+      "last_notified_at": null
     }
   }
 ]

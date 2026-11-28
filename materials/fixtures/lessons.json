@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "model": "materials.lesson",
     "pk": 1,
@@ -7,7 +7,10 @@
       "name": "Введение в Python",
       "description": "Установка интерпретатора, первая программа и работа в REPL.",
       "preview_image": null,
-      "video": "https://example.com/videos/python-intro"
+      "video": "https://example.com/videos/python-intro",
+      "owner": 1,
+      "price": "3000.00",
+      "updated_at": "2024-04-01T10:00:00Z"
     }
   },
   {
@@ -18,7 +21,10 @@
       "name": "Переменные и типы данных",
       "description": "Числа, строки, списки, словари и приведение типов.",
       "preview_image": null,
-      "video": "https://example.com/videos/python-types"
+      "video": "https://example.com/videos/python-types",
+      "owner": 1,
+      "price": "3000.00",
+      "updated_at": "2024-04-01T10:00:00Z"
     }
   },
   {
@@ -29,7 +35,10 @@
       "name": "Установка и настройка Django",
       "description": "Создание проекта, настройка settings и запуск сервера разработки.",
       "preview_image": null,
-      "video": "https://example.com/videos/django-setup"
+      "video": "https://example.com/videos/django-setup",
+      "owner": 1,
+      "price": "3500.00",
+      "updated_at": "2024-04-01T10:00:00Z"
     }
   },
   {
@@ -40,7 +49,10 @@
       "name": "Сериализаторы DRF",
       "description": "ModelSerializer, валидация данных и вложенные сериализаторы.",
       "preview_image": null,
-      "video": "https://example.com/videos/drf-serializers"
+      "video": "https://example.com/videos/drf-serializers",
+      "owner": 1,
+      "price": "3500.00",
+      "updated_at": "2024-04-01T10:00:00Z"
     }
   },
   {
@@ -51,7 +63,10 @@
       "name": "Основы SQL",
       "description": "SELECT, WHERE, ORDER BY и фильтрация данных.",
       "preview_image": null,
-      "video": "https://example.com/videos/sql-basics"
+      "video": "https://example.com/videos/sql-basics",
+      "owner": 1,
+      "price": "2500.00",
+      "updated_at": "2024-04-01T10:00:00Z"
     }
   },
   {
@@ -62,7 +77,10 @@
       "name": "JOIN и агрегатные функции",
       "description": "Объединение таблиц, GROUP BY, COUNT, SUM и AVG.",
       "preview_image": null,
-      "video": null
+      "video": null,
+      "owner": 1,
+      "price": "2500.00",
+      "updated_at": "2024-04-01T10:00:00Z"
     }
   }
 ]

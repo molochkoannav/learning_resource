@@ -168,12 +168,9 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'noreply@learning-resource.local'
-
 CELERY_BEAT_SCHEDULE = {
     'deactivate-inactive-users-every-day': {
-        'task': 'courses.tasks.deactivate_inactive_users', 
-        'schedule': crontab(hour=3, minute=0),  
+        'task': 'users.tasks.deactivate_inactive_users',
+        'schedule': crontab(hour=3, minute=0),
     },
 }

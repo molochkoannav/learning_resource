@@ -10,10 +10,11 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status, viewsets
+from rest_framework import mixins, status, viewsets
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import RetrieveUpdateAPIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -32,13 +33,51 @@ logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+# ---------------------------------------------------------------------------
+# Users
+# ---------------------------------------------------------------------------
+
+class UserViewSet(
+    mixins.ListModelMixin,        # список — только staff
+    mixins.RetrieveModelMixin,    # свой профиль (или любой — staff)
+    mixins.UpdateModelMixin,      # свой профиль (или любой — staff)
+    mixins.DestroyModelMixin,     # удаление — только staff
+    viewsets.GenericViewSet,
+):
+    """
+    Безопасный CRUD по пользователям.
+
+    - create отсутствует: регистрация только через RegisterView.
+    - list / destroy: только администратор (IsAdminUser).
+    - retrieve / update: обычный пользователь видит и меняет ТОЛЬКО себя,
+      staff — любого. Чужой id → 404 (не 403), чтобы не палить существование.
+    """
+
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.action in ("list", "destroy"):
+            return [IsAdminUser()]
+        return [IsAuthenticated()]
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = User.objects.prefetch_related("payments")
+        if user.is_staff:
+            return qs
+        return qs.filter(pk=user.pk)
+
+    def perform_destroy(self, instance):
+        if not self.request.user.is_staff:
+            raise PermissionDenied(
+                "Удаление пользователей доступно только администратору"
+            )
+        instance.delete()
 
 
 class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
+    """Эндпоинт /me/ — только свой профиль."""
+
     permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
 
@@ -46,15 +85,41 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         return self.request.user
 
 
-class PaymentViewSet(viewsets.ModelViewSet):
+# ---------------------------------------------------------------------------
+# Payments (read-only + фильтр по владельцу)
+# ---------------------------------------------------------------------------
+
+class PaymentViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
+    """
+    Только чтение. Создание — через create_payment_view,
+    обновление статуса — через вебхук / check_payment_status_view.
+
+    Обычный пользователь видит только СВОИ платежи.
+    Чужой id → 404.
+    """
+
     permission_classes = [IsAuthenticated]
-    queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ["paid_course", "paid_lesson", "payment_method"]
     ordering_fields = ["date_payment"]
     ordering = ["-date_payment"]
 
+    def get_queryset(self):
+        user = self.request.user
+        qs = Payment.objects.select_related("user", "paid_course", "paid_lesson")
+        if user.is_staff:
+            return qs
+        return qs.filter(user=user)
+
+
+# ---------------------------------------------------------------------------
+# Registration
+# ---------------------------------------------------------------------------
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
@@ -75,7 +140,9 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# ---------- helpers ----------
+# ---------------------------------------------------------------------------
+# helpers
+# ---------------------------------------------------------------------------
 
 def _stripe_error_response(exc: stripe.error.StripeError, payment=None):
     """Единый ответ на ошибки Stripe + пометка «висячего» платежа."""
@@ -92,11 +159,19 @@ def _stripe_error_response(exc: stripe.error.StripeError, payment=None):
     )
 
 
-# ---------- views ----------
+# ---------------------------------------------------------------------------
+# payment flow
+# ---------------------------------------------------------------------------
 
 @csrf_exempt
 @require_POST
 def create_payment_view(request):
+    # --- 0. Только аутентифицированные; user_id из тела НЕ принимаем ---
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "Authentication required"}, status=401)
+
+    user = request.user
+
     # --- 1. Тело запроса ---
     try:
         body = json.loads(request.body or b"{}")
@@ -114,16 +189,7 @@ def create_payment_view(request):
     if payment_method not in ("card", "cash"):
         return JsonResponse({"error": "Unknown payment_method"}, status=400)
 
-    # --- 2. Пользователь ---
-    user = request.user if request.user.is_authenticated else None
-    if user is None:
-        from users.models import CustomUser
-        user_id = body.get("user_id")
-        if not user_id:
-            return JsonResponse({"error": "user_id is required"}, status=400)
-        user = get_object_or_404(CustomUser, id=user_id)
-
-    # --- 3. Что оплачиваем ---
+    # --- 2. Что оплачиваем ---
     if course_id:
         paid_object = get_object_or_404(Course, id=course_id)
         paid_course, paid_lesson = paid_object, None
@@ -135,11 +201,11 @@ def create_payment_view(request):
         amount = paid_object.price
         product_name = paid_object.name
 
-    # --- 4. Валидация суммы ДО Stripe ---
+    # --- 3. Валидация суммы ДО Stripe ---
     if amount is None or float(amount) <= 0:
         return JsonResponse({"error": "Invalid amount for this item"}, status=400)
 
-    # --- 5. Наличные ---
+    # --- 4. Наличные ---
     if payment_method == "cash":
         payment = Payment.objects.create(
             user=user,
@@ -157,7 +223,7 @@ def create_payment_view(request):
             status=201,
         )
 
-    # --- 6. Карта: Product -> Price -> Payment -> Session ---
+    # --- 5. Карта: Product -> Price -> Payment -> Session ---
     payment = None
     try:
         product_id = create_stripe_product(
@@ -170,7 +236,6 @@ def create_payment_view(request):
             currency="rub",
         )
 
-        # Payment создаём ТОЛЬКО после успешных Product + Price
         payment = Payment.objects.create(
             user=user,
             paid_course=paid_course,
@@ -212,8 +277,17 @@ def create_payment_view(request):
 
 
 def check_payment_status_view(request, session_id):
-    payment = get_object_or_404(Payment, stripe_session_id=session_id)
+    # --- 0. Только аутентифицированные ---
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "Authentication required"}, status=401)
 
+    # --- 1. Фильтр по владельцу (staff видит все) ---
+    qs = Payment.objects.filter(stripe_session_id=session_id)
+    if not request.user.is_staff:
+        qs = qs.filter(user=request.user)
+    payment = get_object_or_404(qs)  # чужой session_id → 404
+
+    # --- 2. Запрос в Stripe ---
     try:
         stripe_data = retrieve_checkout_session(session_id)
     except stripe.error.StripeError as exc:
@@ -226,7 +300,7 @@ def check_payment_status_view(request, session_id):
             status=502,
         )
 
-    # Stripe отдаёт "paid"/"unpaid"/"no_payment_required" — маппим в локальные статусы
+    # --- 3. Маппинг статуса ---
     stripe_status = stripe_data["payment_status"]
     payment.status = {
         "paid": "paid",

@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "model": "users.customuser",
     "pk": 1,
@@ -8,12 +8,15 @@
       "is_superuser": true,
       "first_name": "Админ",
       "last_name": "Админов",
-      "email": "admin@example.com",
       "is_staff": true,
       "is_active": true,
       "date_joined": "2024-01-10T10:00:00Z",
+      "avatar_image": null,
       "phone_number": "+7 900 000-00-01",
-      "city": "Москва"
+      "city": "Москва",
+      "email": "admin@example.com",
+      "groups": [1],
+      "user_permissions": []
     }
   },
   {
@@ -25,12 +28,15 @@
       "is_superuser": false,
       "first_name": "Иван",
       "last_name": "Петров",
-      "email": "ivan@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2024-02-01T11:00:00Z",
+      "avatar_image": null,
       "phone_number": "+7 900 000-00-02",
-      "city": "Москва"
+      "city": "Москва",
+      "email": "ivan@example.com",
+      "groups": [],
+      "user_permissions": []
     }
   },
   {
@@ -42,12 +48,15 @@
       "is_superuser": false,
       "first_name": "Мария",
       "last_name": "Сидорова",
-      "email": "maria@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2024-03-15T08:45:00Z",
+      "avatar_image": null,
       "phone_number": "+7 900 000-00-03",
-      "city": "Санкт-Петербург"
+      "city": "Санкт-Петербург",
+      "email": "maria@example.com",
+      "groups": [],
+      "user_permissions": []
     }
   }
 ]
